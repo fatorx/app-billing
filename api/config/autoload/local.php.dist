@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * Local Configuration Override
+ *
+ * This configuration override file is for overriding environment-specific and
+ * security-sensitive configuration information. Copy this file without the
+ * .dist extension at the end and populate values as needed.
+ *
+ * NOTE: This file is ignored from Git by default with the .gitignore included
+ * in laminas-mvc-skeleton. This is a good practice, as it prevents sensitive
+ * credentials from accidentally being committed into version control.
+ */
+
+use Application\Util\Environment;
+use Doctrine\DBAL\Driver\PDO\MySQL\Driver;
+
+return [
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'driverClass' => Driver::class,
+                'params' => [
+                    'host'      => Environment::env('DB_HOST'),
+                    'user'      => Environment::env('DB_USER'),
+                    'password'  => Environment::env('DB_PASSWORD'),
+                    'port' => Environment::env('DB_PORT'),
+                    'dbname'    => Environment::env('DB_NAME'),
+                ]
+            ],
+        ],
+    ],
+    'ApiRequest' => [
+        'responseFormat' => [
+            'statusKey' => 'status',
+            'statusOkText' => true,
+            'statusNokText' => false,
+            'resultKey' => 'result',
+            'messageKey' => 'message',
+            'defaultMessageText' => 'Empty response!',
+            'errorKey' => 'error',
+            'defaultErrorText' => 'Unknown request!',
+            'authenticationRequireText' => 'Authentication Required.',
+            'pageNotFoundKey' => 'Request Not Found.'
+        ],
+        'jwtAuth' => [
+            'cypherKey' => Environment::env('CYPHER_KEY'),
+            'tokenAlgorithm' => 'HS256'
+        ],
+    ],
+    'app' => [
+        'app_key' => Environment::env('APP_KEY'),
+        'app_username' => Environment::env('APP_USERNAME'),
+        'app_password' => Environment::env('APP_PASSWORD'),
+        'redis_host'   => Environment::env('REDIS_HOST'),
+        'swoole_port'  => Environment::env('SWOOLE_PORT'),
+        'environment'  => Environment::env('ENVIRONMENT')
+    ],
+];

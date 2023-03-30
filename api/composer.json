@@ -1,0 +1,67 @@
+{
+    "name": "fatorx/app-billing",
+    "description": "An application to manage payments of billings",
+    "type": "project",
+    "license": "MIT",
+    "keywords": [
+        "laminas",
+        "api",
+        "framework"
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-pdo": "*",
+        "ext-redis": "*",
+        "ext-json": "*",
+        "composer/composer": "*",
+        "psr/container": "*",
+        "laminas/laminas-component-installer": "*",
+        "laminas/laminas-mvc": "3.4.0",
+        "laminas/laminas-authentication": "*",
+        "laminas/laminas-paginator": "*",
+        "laminas/laminas-inputfilter": "*",
+        "laminas/laminas-hydrator": "*",
+        "laminas/laminas-form": "*",
+        "laminas/laminas-filter": "*",
+        "laminas/laminas-cache": "*",
+        "doctrine/dbal": "*",
+        "doctrine/doctrine-module": "*",
+        "doctrine/doctrine-orm-module": "*",
+        "firebase/php-jwt": "^v6.4.0",
+        "cocur/slugify": "^4.0",
+        "monolog/monolog": "^2.0",
+        "guzzlehttp/guzzle": "^6.5",
+        "vlucas/phpdotenv": "^5.2",
+        "php-amqplib/php-amqplib": ">=v3.5.2"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.3",
+        "symfony/maker-bundle": "^1.14",
+        "phpunit/phpunit": "^9.5",
+        "phpunit/php-code-coverage": "^9.2",
+        "laminas/laminas-test": "^4.3.0",
+        "laminas/laminas-development-mode": "^3.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Application\\": "module/Application/src/",
+            "Billing\\": "module/Billing/src/",
+            "Users\\": "module/Users/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ApplicationTest\\": "tests/ApplicationTest/",
+            "BillingTest\\": "tests/BillingTest/",
+            "UsersTest\\": "tests/UsersTest/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-component-installer": true
+        }
+    }
+}

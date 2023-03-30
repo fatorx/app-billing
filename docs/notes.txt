@@ -1,0 +1,17 @@
+
+Review Authentication (Manager/Events) and Token JWT
+
+Add Controllers: check the file Module.php of the module
+
+docker exec -it app-billing-php-fpm bash
+
+PHPUnit
+    vendor/bin/phpunit
+
+    coverage
+        XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html data/report
+
+
+    vendor/bin/phpunit --testdox --testsuite "Users Test Suite" --group elements
+    vendor/bin/phpunit --testdox --testsuite "Billing Test Suite"
+
