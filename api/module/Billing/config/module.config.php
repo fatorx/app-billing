@@ -5,7 +5,7 @@ namespace Billing;
 use Laminas\Router\Http\Literal;
 use Laminas\Router\Http\Segment;
 
-const VERSION = '/v1';
+const VERSION_V1 = '/v1';
 
 return [
     'router' => [
@@ -13,38 +13,24 @@ return [
             'billing-index' => [
                 'type'    => Literal::class,
                 'options' => [
-                    'route'    => VERSION . '/billing-home',
+                    'route'    => VERSION_V1 . '/billing/send-file',
                     'defaults' => [
                         'controller' => Controller\BillingController::class,
                         'isAuthorizationRequired' => false,
-                        'action' => 'index',
+                        'action' => 'sendFile',
                         'methodsAuthorization'    => ['POST'],
                     ],
                 ],
             ],
-            'billing-post' => [
+            'billing-webhook' => [
                 'type'    => Literal::class,
                 'options' => [
-                    'route'    => VERSION . '/billing-post',
+                    'route'    => VERSION_V1 . '/billing/webhook',
                     'defaults' => [
                         'controller' => Controller\BillingController::class,
                         'isAuthorizationRequired' => false,
-                        'action' => 'post',
+                        'action' => 'webhook',
                         'methodsAuthorization'    => ['POST'],
-                    ],
-                ],
-            ],
-            'billing' => [
-                'type'    => Segment::class,
-                'options' => [
-                    'route'    => VERSION . '/billing[/:id]',
-                    'defaults' => [
-                        'controller'    => Controller\BillingController::class,
-                        'isAuthorizationRequired' => true,
-                        'methodsAuthorization'    => ['GET', 'POST', 'PUT', 'DELETE'],
-                    ],
-                    'constraints' => [
-                        'formatter' => '[a-zA-Z0-9_-]*',
                     ],
                 ],
             ],

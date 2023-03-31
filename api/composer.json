@@ -13,6 +13,7 @@
         "ext-pdo": "*",
         "ext-redis": "*",
         "ext-json": "*",
+        "ext-zip": "*",
         "composer/composer": "*",
         "psr/container": "*",
         "laminas/laminas-component-installer": "*",
@@ -24,6 +25,8 @@
         "laminas/laminas-form": "*",
         "laminas/laminas-filter": "*",
         "laminas/laminas-cache": "*",
+        "laminas/laminas-file" : "2.12.0",
+        "laminas/laminas-stdlib" : "3.17.0",
         "doctrine/dbal": "*",
         "doctrine/doctrine-module": "*",
         "doctrine/doctrine-orm-module": "*",
@@ -32,6 +35,7 @@
         "monolog/monolog": "^2.0",
         "guzzlehttp/guzzle": "^6.5",
         "vlucas/phpdotenv": "^5.2",
+        "ramsey/uuid": "4.7.3",
         "php-amqplib/php-amqplib": ">=v3.5.2"
     },
     "require-dev": {

@@ -3,6 +3,11 @@
 namespace Billing\Service;
 
 use Application\Service\BaseService;
+use Billing\Message\Producer;
+use Billing\Storage\StorageFile;
+use Billing\Values\FileMessage;
+use Billing\Values\PostFile;
+use Exception;
 
 /**
  * Class BillingService
@@ -10,21 +15,34 @@ use Application\Service\BaseService;
  */
 class BillingService extends BaseService
 {
-    /**
-     * @var string
-     */
-    private string $entity;
+    private StorageFile $storageFile;
+    private Producer $producer;
 
     /**
-     * TagService constructor.
+     * StorageFile constructor.
      */
-    public function __construct()
+    public function __construct(StorageFile $storageFile, Producer $producer)
     {
-
+        $this->storageFile = $storageFile;
+        $this->producer = $producer;
     }
 
-    public function getList(): array
+    /**
+     * @throws Exception
+     */
+    public function storage(PostFile $postFile): string|null
     {
-        return [];
+        $statusFile = $this->storageFile->persist($postFile);
+
+        if ($statusFile) {
+            $uuidStorage = $this->storageFile->getUuidStorage();
+            $fileMessage = new FileMessage($uuidStorage);
+            $this->producer->createMessage($fileMessage->getMessage());
+
+            return $uuidStorage;
+        }
+
+        return null;
     }
+
 }

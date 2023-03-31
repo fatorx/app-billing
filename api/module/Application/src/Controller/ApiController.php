@@ -12,8 +12,10 @@ use Laminas\Http\PhpEnvironment\Response;
 use Laminas\Http\Request;
 use Laminas\Json\Json;
 use Laminas\Mvc\Controller\AbstractRestfulController;
+use Laminas\Stdlib\Parameters;
 use Laminas\Stdlib\ResponseInterface;
 use Laminas\View\Model\JsonModel;
+use MongoDB\Driver\Exception\ExecutionTimeoutException;
 
 class ApiController extends AbstractRestfulController implements IController
 {
@@ -256,7 +258,7 @@ class ApiController extends AbstractRestfulController implements IController
 
     public function setConfig(array $config)
     {
-        // TODO: Implement setConfig() method.
+        // @todo: Implement setConfig() method.
     }
 
     /**
@@ -274,6 +276,17 @@ class ApiController extends AbstractRestfulController implements IController
             return $data;
         }
         return $data[$param] ?? $default;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getFile(): Parameters
+    {
+        /** @var Request $request */
+        $request = $this->getRequest();
+
+        return $request->getFiles();
     }
 
     public function getDateTime(): string

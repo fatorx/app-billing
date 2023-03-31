@@ -54,6 +54,12 @@ return [
         'app_password' => Environment::env('APP_PASSWORD'),
         'redis_host'   => Environment::env('REDIS_HOST'),
         'swoole_port'  => Environment::env('SWOOLE_PORT'),
-        'environment'  => Environment::env('ENVIRONMENT')
+        'environment'  => Environment::env('ENVIRONMENT'),
+        'rabbit_mq' => [
+            'host'   => Environment::env('RABBITMQ_HOST'),
+            'port'  => Environment::env('RABBITMQ_PORT'),
+            'username' => Environment::env('RABBITMQ_USERNAME'),
+            'password' => Environment::env('RABBITMQ_PASSWORD'),
+        ]
     ],
 ];

@@ -4,7 +4,9 @@ namespace Billing;
 
 use Application\Service\Config as ConfigService;
 use Billing\Controller\BillingController;
+use Billing\Message\Producer;
 use Billing\Service\BillingService;
+use Billing\Storage\StorageFile;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Users\Service\UserService;
@@ -21,7 +23,17 @@ class Module implements ConfigProviderInterface
         return [
             'factories' => [
                 BillingService::class => function (ServiceManager $serviceManager) {
-                    return (new ConfigService())->setup($serviceManager, new BillingService());
+                    $storageFile = new StorageFile();
+                    $producer = $serviceManager->get(Producer::class);
+                    $billingService = new BillingService($storageFile, $producer);
+
+                    return  (new ConfigService())->setup($serviceManager, $billingService);
+                },
+                Producer::class => function (ServiceManager $serviceManager) {
+                    $config = $serviceManager->get('config');
+                    $configRabbit = $config['app']['rabbit_mq'];
+
+                    return new Producer($configRabbit);
                 },
             ]
         ];

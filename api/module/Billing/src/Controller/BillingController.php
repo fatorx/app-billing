@@ -4,6 +4,7 @@ namespace Billing\Controller;
 
 use Application\Controller\ApiController;
 use Billing\Service\BillingService;
+use Billing\Values\PostFile;
 use Exception;
 use Laminas\View\Model\JsonModel;
 
@@ -26,114 +27,44 @@ class BillingController extends ApiController
         $this->service = $service;
     }
 
-    /**
-     * @return JsonModel
-     */
-    public function getList(): JsonModel
-    {
-        $data = [
-            'users' => [],
-            'method' => 'get'
-        ];
-        return $this->createResponse($data);
-    }
-
-    /**
-     * @param $id
-     * @return JsonModel
-     */
-    public function get($id): JsonModel
-    {
-        $data = [
-            'id' => $id,
-            'method' => 'get'
-        ];
-        return $this->createResponse($data);
-    }
-
-    /**
-     * @param $data
-     * @return JsonModel
-     */
-    public function create($data): JsonModel
+    public function sendFileAction(): JsonModel
     {
         try {
+            $data = $this->getFile();
+            $postFile = new PostFile($data);
+            $isSendFile = $this->service->storage($postFile);
             $data = [
-                'message' => 'create',
-                'data' => $data,
-                'id' => 0,
-                'action' => 'create'
+                'send_file' => $isSendFile,
+                'data' => $data
             ];
-
-        } catch (Exception $e) {
+        } catch(Exception $e) {
             $this->httpStatusCode = 400;
-
             $data = [
-                'message' => $e->getMessage(),
-                'id' => 0,
-                'action' => 'create'
-            ];
-        } finally {
-            echo 'vai acontecer';
-        }
-
-        return $this->createResponse($data);
-    }
-
-    /**
-     * @param $id
-     * @param $data
-     * @return JsonModel
-     */
-    public function update($id, $data): JsonModel
-    {
-        try {
-            $data = [
-                'item' => 'update',
-                'data' => $data,
-                'action' => 'update',
-            ];
-
-        } catch (Exception $e) {
-
-            $this->httpStatusCode = 400;
-            if ($e->getMessage() == 'Entity not found!') {
-                $this->httpStatusCode = 404;
-            }
-
-            $data = [
-                'message' => $e->getMessage(),
-                'id' => 0,
-                'action' => 'create'
+                'message' => $e->getMessage()
             ];
         }
 
         return $this->createResponse($data);
     }
 
-    public function postAction()
+    public function webhookAction(): JsonModel
     {
         try {
             $data = $this->getJsonParameters();
-            echo '<pre>'; var_dump($data); exit();
-            $data = [];
+
+            $str = '';
+            $limit = 10000000;
+            for ($i = 0; $i < $limit; ++$i) {
+                $str .= $i . '-';
+            }
+
+            $data = [
+                'data' => $data
+            ];
         } catch(Exception $e) {
             $data = [];
         }
 
-        return $this->createResponse($data);
-    }
-
-    /**
-     * @param $id
-     * @return JsonModel
-     */
-    public function delete($id): JsonModel
-    {
-        $data = [
-            'item' => 'item',
-            'action' => 'update'
-        ];
         return $this->createResponse($data);
     }
 }
