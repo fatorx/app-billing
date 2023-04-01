@@ -4,12 +4,14 @@ namespace Billing;
 
 use Application\Service\Config as ConfigService;
 use Billing\Controller\BillingController;
+use Billing\Message\Consumer;
 use Billing\Message\Producer;
+use Billing\Service\BillingFileService;
+use Billing\Service\BillingLineService;
 use Billing\Service\BillingService;
 use Billing\Storage\StorageFile;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
 use Laminas\ServiceManager\ServiceManager;
-use Users\Service\UserService;
 
 class Module implements ConfigProviderInterface
 {
@@ -24,16 +26,45 @@ class Module implements ConfigProviderInterface
             'factories' => [
                 BillingService::class => function (ServiceManager $serviceManager) {
                     $storageFile = new StorageFile();
+
+                    /** @var Producer $producer */
                     $producer = $serviceManager->get(Producer::class);
-                    $billingService = new BillingService($storageFile, $producer);
+
+                    /** @var Consumer $consumer */
+                    $consumer = $serviceManager->get(Consumer::class);
+
+                    $billingService = new BillingService($storageFile, $producer, $consumer);
 
                     return  (new ConfigService())->setup($serviceManager, $billingService);
                 },
+                BillingFileService::class => function (ServiceManager $serviceManager) {
+                    $storageFile = new StorageFile();
+
+                    /** @var Producer $producer */
+                    $producer = $serviceManager->get(Producer::class);
+
+                    $billingService = new BillingFileService($storageFile, $producer);
+
+                    return  (new ConfigService())->setup($serviceManager, $billingService);
+                },
+                BillingLineService::class => function (ServiceManager $serviceManager) {
+                    /** @var Producer $producer */
+                    $producer = $serviceManager->get(Producer::class);
+                    $billingLineService = new BillingLineService($producer);
+
+                    return  (new ConfigService())->setup($serviceManager, $billingLineService);
+                },
                 Producer::class => function (ServiceManager $serviceManager) {
-                    $config = $serviceManager->get('config');
+                    $config = $serviceManager->get(ConfigService::CONFIG_KEY);
                     $configRabbit = $config['app']['rabbit_mq'];
 
                     return new Producer($configRabbit);
+                },
+                Consumer::class => function (ServiceManager $serviceManager) {
+                    $config = $serviceManager->get(ConfigService::CONFIG_KEY);
+                    $configRabbit = $config['app']['rabbit_mq'];
+
+                    return new Consumer($serviceManager, $configRabbit);
                 },
             ]
         ];

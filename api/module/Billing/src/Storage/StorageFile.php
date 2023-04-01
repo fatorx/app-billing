@@ -5,11 +5,13 @@ namespace Billing\Storage;
 use Billing\Values\PostFile;
 use Exception;
 use Ramsey\Uuid\Uuid;
+use SplFileObject;
 use ZipArchive;
 
 class StorageFile
 {
     const MESSAGE_FAIL_SEND_FILE = 'Não foi possível armazenar o arquivo.';
+    const MESSAGE_FAIL_GET_FILE = 'Não foi possível recuperar o arquivo.';
 
     private string $path;
     private string $uuidStorage;
@@ -65,5 +67,44 @@ class StorageFile
     public function getUuidStorage(): string
     {
         return $this->uuidStorage;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function get(string $uuid, $ext = 'zip'): array
+    {
+        $pathFile = $this->path = getcwd() . "/data/storage/{$uuid}.{$ext}" ;
+        $fileObject = new SplFileObject($pathFile);
+
+        $list = [];
+        if ($fileObject->isFile()) {
+            $this->extracted($pathFile);
+
+            $pathTmp = "/tmp/{$uuid}.csv";
+            $fileExtract = new SplFileObject($pathTmp);
+
+            while (!$fileExtract->eof()) {
+                $list[] = $fileExtract->fgetcsv();
+            }
+        }
+
+        return $list;
+    }
+
+    /**
+     * @param string $pathFile
+     * @return void
+     * @throws Exception
+     */
+    private function extracted(string $pathFile): void
+    {
+        $zip = new ZipArchive();
+        if ($zip->open($pathFile) !== true) {
+            throw new Exception(self::MESSAGE_FAIL_GET_FILE);
+        }
+
+        $zip->extractTo('/tmp');
+        $zip->close();
     }
 }

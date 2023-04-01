@@ -32,10 +32,26 @@ class BillingController extends ApiController
         try {
             $data = $this->getFile();
             $postFile = new PostFile($data);
-            $isSendFile = $this->service->storage($postFile);
+            $fileName = $this->service->storage($postFile);
             $data = [
-                'send_file' => $isSendFile,
-                'data' => $data
+                'send_file' => $fileName,
+            ];
+        } catch(Exception $e) {
+            $this->httpStatusCode = 400;
+            $data = [
+                'message' => $e->getMessage()
+            ];
+        }
+
+        return $this->createResponse($data);
+    }
+
+    public function consumerFilesAction(): JsonModel
+    {
+        try {
+            $fileName = $this->service->consumerFiles();
+            $data = [
+                'send_file' => $fileName,
             ];
         } catch(Exception $e) {
             $this->httpStatusCode = 400;

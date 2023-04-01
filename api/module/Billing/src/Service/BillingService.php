@@ -3,6 +3,7 @@
 namespace Billing\Service;
 
 use Application\Service\BaseService;
+use Billing\Message\Consumer;
 use Billing\Message\Producer;
 use Billing\Storage\StorageFile;
 use Billing\Values\FileMessage;
@@ -17,14 +18,16 @@ class BillingService extends BaseService
 {
     private StorageFile $storageFile;
     private Producer $producer;
+    private Consumer $consumer;
 
     /**
      * StorageFile constructor.
      */
-    public function __construct(StorageFile $storageFile, Producer $producer)
+    public function __construct(StorageFile $storageFile, Producer $producer, Consumer $consumer)
     {
         $this->storageFile = $storageFile;
         $this->producer = $producer;
+        $this->consumer = $consumer;
     }
 
     /**
@@ -45,4 +48,9 @@ class BillingService extends BaseService
         return null;
     }
 
+    public function consumerFiles(): true
+    {
+        $this->consumer->waitingMessages();
+        return true;
+    }
 }

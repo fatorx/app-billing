@@ -3,7 +3,6 @@
 namespace Billing;
 
 use Laminas\Router\Http\Literal;
-use Laminas\Router\Http\Segment;
 
 const VERSION_V1 = '/v1';
 
@@ -19,6 +18,18 @@ return [
                         'isAuthorizationRequired' => false,
                         'action' => 'sendFile',
                         'methodsAuthorization'    => ['POST'],
+                    ],
+                ],
+            ],
+            'billing-consumer-files' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => VERSION_V1 . '/billing/consumer-files',
+                    'defaults' => [
+                        'controller' => Controller\BillingController::class,
+                        'isAuthorizationRequired' => false,
+                        'action' => 'consumerFiles',
+                        'methodsAuthorization'    => ['GET'],
                     ],
                 ],
             ],

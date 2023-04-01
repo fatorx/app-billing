@@ -2,23 +2,24 @@
 
 namespace Billing\Values;
 
-use Billing\Service\BillingFileService;
+use Billing\Entity\Invoice;
+use Billing\Service\MailService;
 use Exception;
 
-class FileMessage
+class MailMessage
 {
-    const MESSAGE_EXCEPTION = 'Houve um problema ao enviar o arquivo.';
+    const MESSAGE_EXCEPTION = 'E-mail inválido.';
 
-    private string $uuid;
+    private Invoice $invoice;
     private string $type;
 
     /**
      * @throws Exception
      */
-    public function __construct(string $uuid)
+    public function __construct(Invoice $invoice)
     {
-        $this->uuid = $uuid;
-        $this->type = BillingFileService::class;
+        $this->invoice = $invoice;
+        $this->type = MailService::class;
 
         $this->validate();
     }
@@ -28,7 +29,7 @@ class FileMessage
      */
     public function validate(): true
     {
-        if ($this->uuid === '') {
+        if ($this->invoice->getEmail() === '') {
             throw new Exception(self::MESSAGE_EXCEPTION);
         }
 
@@ -40,9 +41,9 @@ class FileMessage
         return $this->type;
     }
 
-    public function getUuid(): string
+    public function getInvoice(): Invoice
     {
-        return $this->uuid;
+        return $this->invoice;
     }
 
     public function getMessage(): string
