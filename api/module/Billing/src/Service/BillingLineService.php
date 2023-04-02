@@ -3,6 +3,7 @@
 namespace Billing\Service;
 
 use Application\Service\BaseService;
+use Billing\Message\ChannelsConfig;
 use Billing\Message\Producer;
 use Billing\Values\LineMessage;
 use Billing\Values\MailMessage;
@@ -33,10 +34,10 @@ class BillingLineService extends BaseService
         $this->em->flush();
 
         $dateTime = $this->getDateTime();
-        $messageLog = $dateTime . " - Process invoice line: {$invoice->getId()} - {$invoice->getEmail()}\n";
+        $messageLog = $dateTime . " - Process invoice line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
         printf($messageLog);
 
         $mailMessage = new MailMessage($invoice);
-        $this->producer->createMessage($mailMessage->getMessage());
+        $this->producer->createMessage($mailMessage->getMessage(), ChannelsConfig::EMAILS);
     }
 }

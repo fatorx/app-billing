@@ -18,12 +18,9 @@ class Consumer
     /**
      * @throws Exception
      */
-    public function __construct(ServiceManager $serviceManager, array $config)
+    public function __construct(ServiceManager $serviceManager, AMQPStreamConnection $connection)
     {
-        $this->connection = new AMQPStreamConnection(
-            $config['host'], $config['port'], $config['username'], $config['password']
-        );
-
+        $this->connection = $connection;
         $this->callBackConsumer = new CallbackConsumer($serviceManager); // @todo review callback
     }
 
@@ -36,11 +33,12 @@ class Consumer
         );
 
         $dateTime = (new Datetime())->format('Y-m-d H:i:s');
-        $messageLog = "{$dateTime} - waiting messages\n";
+        $messageLog = "{$dateTime} - waiting messages - {$channelName}\n";
         printf($messageLog);
 
-        $channel->basic_consume($channelName, '',
-            false, true,
+        $channel->basic_consume(
+            $channelName, '',
+            false, false,
             false, false,
             $this->callBackConsumer);
 

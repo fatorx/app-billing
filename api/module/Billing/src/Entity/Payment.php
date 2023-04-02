@@ -11,42 +11,40 @@ use Doctrine\ORM\Mapping\Table;
 use Exception;
 use Laminas\Hydrator\ClassMethodsHydrator;
 use Laminas\Hydrator\NamingStrategy\UnderscoreNamingStrategy;
-use Laminas\Validator\Date;
 
-#[Table(name: "billings")]
+#[Table(name: "payments")]
 #[Entity]
-class Invoice
+class Payment
 {
+    const STATUS_NOT_PROCESSED = 0;
+
     #[Id]
     #[Column(type: 'integer')]
     #[GeneratedValue]
     private int|null $id = 0;
 
-    #[Column(name:"name", type: "string", length: 90,  nullable: true)]
-    protected string $name;
-
-    #[Column(name:"government_id", type: "string", length: 11,  nullable: false)]
-    protected string $governmentId;
-
-    #[Column(name:"email", type: "string", length: 90,  nullable: true)]
-    protected string $email;
-
-    #[Column(name:"amount", type: "decimal", precision: 5)]
-    protected string $amount;
-
-    #[Column(name:"due_date", type: "date", nullable: false)]
-    protected DateTime $dueDate;
-
-    #[Column(name:"status", type: "integer", nullable: false)]
-    protected int $status = 0;
-
-    #[Column(name:"debt_id", type: "integer", nullable: false)]
+    #[Column(name: "debt_id", type: "integer", nullable: false)]
     protected int $debtId = 0;
 
-    #[Column(name:"created_at", type: "datetime", nullable:false)]
+    #[Column(name: "paid_at", type: "datetime", nullable: false)]
+    protected DateTime $paidAt;
+
+    #[Column(name: "paid_amount", type: "decimal", precision: 5)]
+    protected string $paidAmount;
+
+    #[Column(name: "paid_by", type: "string", length: 90, nullable: true)]
+    protected string $paidBy;
+
+    #[Column(name: "billing_id", type: "integer", nullable: false)]
+    protected int $billingId = 0;
+
+    #[Column(name: "status", type: "integer", nullable: false)]
+    protected int $status = self::STATUS_NOT_PROCESSED;
+
+    #[Column(name: "created_at", type: "datetime", nullable: false)]
     protected Datetime $createdAt;
 
-    #[Column(name:"updated_at", type: "datetime", nullable:false)]
+    #[Column(name: "updated_at", type: "datetime", nullable: false)]
     protected Datetime $updatedAt;
 
     /**
@@ -72,11 +70,11 @@ class Invoice
         $hydrator = new ClassMethodsHydrator(false);
         $hydrator->setNamingStrategy(new UnderscoreNamingStrategy());
 
-        $dueDate = new DateTime($input['due_date']);
-        unset($input['due_date']);
+        $dueDate = new DateTime($input['paid_at']);
+        unset($input['paid_at']);
 
         $hydrator->hydrate($input, $this);
-        $this->setDueDate($dueDate);
+        $this->setPaidAt($dueDate);
     }
 
     /**
@@ -84,9 +82,9 @@ class Invoice
      */
     public function toArray(): array
     {
-        $extractData =  (new ClassMethodsHydrator(true))->extract($this);
+        $extractData = (new ClassMethodsHydrator(true))->extract($this);
 
-        unset($extractData['created_at'], $extractData['updated_at'] );
+        unset($extractData['created_at'], $extractData['updated_at']);
         return $extractData;
     }
 
@@ -107,88 +105,83 @@ class Invoice
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getName(): string
+    public function getDebtId(): int
     {
-        return $this->name;
+        return $this->debtId;
     }
 
     /**
-     * @param string $name
+     * @param int $debtId
      */
-    public function setName(string $name): void
+    public function setDebtId(int $debtId): void
     {
-        $this->name = $name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGovernmentId(): string
-    {
-        return $this->governmentId;
-    }
-
-    /**
-     * @param string $governmentId
-     */
-    public function setGovernmentId(string $governmentId): void
-    {
-        $this->governmentId = $governmentId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    /**
-     * @param bool $format
-     * @return string
-     */
-    public function getAmount(bool $format = false): string
-    {
-        if ($format) {
-            return  number_format($this->amount,2,",",".");
-        }
-
-        return $this->amount;
-    }
-
-    /**
-     * @param string $amount
-     */
-    public function setAmount(string $amount): void
-    {
-        $this->amount = $amount;
+        $this->debtId = $debtId;
     }
 
     /**
      * @return DateTime
      */
-    public function getDueDate(): DateTime
+    public function getPaidAt(): DateTime
     {
-        return $this->dueDate;
+        return $this->paidAt;
     }
 
     /**
-     * @param DateTime $dueDate
+     * @param DateTime $paidAt
      */
-    public function setDueDate(DateTime $dueDate): void
+    public function setPaidAt(DateTime $paidAt): void
     {
-        $this->dueDate = $dueDate;
+        $this->paidAt = $paidAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaidAmount(): string
+    {
+        return $this->paidAmount;
+    }
+
+    /**
+     * @param float $paidAmount
+     */
+    public function setPaidAmount(float $paidAmount): void
+    {
+        $this->paidAmount = $paidAmount;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaidBy(): string
+    {
+        return $this->paidBy;
+    }
+
+    /**
+     * @param string $paidBy
+     */
+    public function setPaidBy(string $paidBy): void
+    {
+        $this->paidBy = $paidBy;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBillingId(): int
+    {
+        return $this->billingId;
+    }
+
+    /**
+     * @param int $billingId
+     */
+    public function setBillingId(int $billingId): void
+    {
+        $this->billingId = $billingId;
     }
 
     /**
@@ -205,22 +198,6 @@ class Invoice
     public function setStatus(int $status): void
     {
         $this->status = $status;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDebtId(): int
-    {
-        return $this->debtId;
-    }
-
-    /**
-     * @param int $debtId
-     */
-    public function setDebtId(int $debtId): void
-    {
-        $this->debtId = $debtId;
     }
 
     /**

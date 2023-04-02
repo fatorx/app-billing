@@ -15,11 +15,9 @@ class Producer
     /**
      * @throws Exception
      */
-    public function __construct(array $config)
+    public function __construct(AMQPStreamConnection $connection)
     {
-        $this->connection = new AMQPStreamConnection(
-            $config['host'], $config['port'], $config['username'], $config['password']
-        );
+        $this->connection = $connection;
     }
 
     public function createMessage(string $message, string $channelName = self::DEFAULT_CHANNEL): true

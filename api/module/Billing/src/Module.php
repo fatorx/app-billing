@@ -4,11 +4,14 @@ namespace Billing;
 
 use Application\Service\Config as ConfigService;
 use Billing\Controller\BillingController;
+use Billing\Message\ConnectionBroker;
 use Billing\Message\Consumer;
 use Billing\Message\Producer;
 use Billing\Service\BillingFileService;
 use Billing\Service\BillingLineService;
 use Billing\Service\BillingService;
+use Billing\Service\MailService;
+use Billing\Service\PaymentService;
 use Billing\Storage\StorageFile;
 use Laminas\ModuleManager\Feature\ConfigProviderInterface;
 use Laminas\ServiceManager\ServiceManager;
@@ -24,6 +27,7 @@ class Module implements ConfigProviderInterface
     {
         return [
             'factories' => [
+
                 BillingService::class => function (ServiceManager $serviceManager) {
                     $storageFile = new StorageFile();
 
@@ -35,8 +39,9 @@ class Module implements ConfigProviderInterface
 
                     $billingService = new BillingService($storageFile, $producer, $consumer);
 
-                    return  (new ConfigService())->setup($serviceManager, $billingService);
+                    return (new ConfigService())->setup($serviceManager, $billingService);
                 },
+
                 BillingFileService::class => function (ServiceManager $serviceManager) {
                     $storageFile = new StorageFile();
 
@@ -45,26 +50,41 @@ class Module implements ConfigProviderInterface
 
                     $billingService = new BillingFileService($storageFile, $producer);
 
-                    return  (new ConfigService())->setup($serviceManager, $billingService);
+                    return (new ConfigService())->setup($serviceManager, $billingService);
                 },
+
                 BillingLineService::class => function (ServiceManager $serviceManager) {
                     /** @var Producer $producer */
                     $producer = $serviceManager->get(Producer::class);
                     $billingLineService = new BillingLineService($producer);
 
-                    return  (new ConfigService())->setup($serviceManager, $billingLineService);
+                    return (new ConfigService())->setup($serviceManager, $billingLineService);
                 },
+
+                MailService::class => function (ServiceManager $serviceManager) {
+                    $mailService = new MailService();
+                    return (new ConfigService())->setup($serviceManager, $mailService);
+                },
+
+                PaymentService::class => function (ServiceManager $serviceManager) {
+                    $paymentService = new PaymentService();
+                    return (new ConfigService())->setup($serviceManager, $paymentService);
+                },
+
                 Producer::class => function (ServiceManager $serviceManager) {
                     $config = $serviceManager->get(ConfigService::CONFIG_KEY);
                     $configRabbit = $config['app']['rabbit_mq'];
 
-                    return new Producer($configRabbit);
+                    $connectionBroker = ConnectionBroker::getInstance($configRabbit);
+                    return new Producer($connectionBroker->getConnection());
                 },
+
                 Consumer::class => function (ServiceManager $serviceManager) {
                     $config = $serviceManager->get(ConfigService::CONFIG_KEY);
                     $configRabbit = $config['app']['rabbit_mq'];
+                    $connectionBroker = ConnectionBroker::getInstance($configRabbit);
 
-                    return new Consumer($serviceManager, $configRabbit);
+                    return new Consumer($serviceManager, $connectionBroker->getConnection());
                 },
             ]
         ];

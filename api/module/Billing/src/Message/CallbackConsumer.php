@@ -26,17 +26,17 @@ class CallbackConsumer
     public function __invoke($message): void
     {
         try {
+
             $content = unserialize($message->body); // @todo check type
-
-            echo $content->getType()."\n";
-
             $service = $this->serviceManager->get($content->getType());
             $service->process($content);
+
         } catch(Exception $e) {
             echo $e->getMessage();
             // @todo add log to options
         }
 
+        $message->ack();
         // @todo remove message
     }
 }

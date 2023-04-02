@@ -4,6 +4,7 @@ namespace Billing\Service;
 
 use Application\Service\BaseService;
 use Billing\Entity\Invoice;
+use Billing\Message\ChannelsConfig;
 use Billing\Message\Producer;
 use Billing\Storage\StorageFile;
 use Billing\Values\FileMessage;
@@ -21,7 +22,7 @@ class BillingFileService extends BaseService
     const INDEX_EMAIL = 2;
     const INDEX_AMOUNT = 3;
     const INDEX_DUE_DATE = 4;
-    const INDEX_DEBIT = 5;
+    const INDEX_DEBT = 5;
 
     private StorageFile $storageFile;
     private Producer $producer;
@@ -61,10 +62,10 @@ class BillingFileService extends BaseService
             $invoice = new Invoice($hydrateInvoice);
 
             $fileMessage = new LineMessage($invoice);
-            $this->producer->createMessage($fileMessage->getMessage());
+            $this->producer->createMessage($fileMessage->getMessage(), ChannelsConfig::LINES);
 
             $dateTime = $this->getDateTime();
-            $messageLog = $dateTime . " - Process invoice line: {$invoice->getId()} - {$invoice->getEmail()}\n";
+            $messageLog = $dateTime . " - Process invoice file line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
             printf($messageLog);
         }
     }
@@ -73,7 +74,7 @@ class BillingFileService extends BaseService
     {
         return !(empty($line[self::INDEX_NAME]) || empty($line[self::INDEX_EMAIL]) ||
                 empty($line[self::INDEX_AMOUNT]) || empty($line[self::INDEX_DUE_DATE]) ||
-                empty($line[self::INDEX_DEBIT]));
+                empty($line[self::INDEX_DEBT]));
     }
 
     /**
@@ -88,7 +89,7 @@ class BillingFileService extends BaseService
             'email' => $line[self::INDEX_EMAIL],
             'amount' => $line[self::INDEX_AMOUNT],
             'due_date' => $line[self::INDEX_DUE_DATE],
-            'debit_id' => (int)$line[self::INDEX_DEBIT],
+            'debt_id' => (int)$line[self::INDEX_DEBT],
         ];
     }
 }

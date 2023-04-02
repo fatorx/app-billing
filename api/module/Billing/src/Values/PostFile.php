@@ -52,7 +52,6 @@ class PostFile
             $message = sprintf(self::MESSAGE_INVALID_LENGTH, $size, $limit);
             throw new Exception($message);
         }
-
     }
 
     public function getType(): string

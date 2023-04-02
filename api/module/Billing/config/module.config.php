@@ -4,15 +4,13 @@ namespace Billing;
 
 use Laminas\Router\Http\Literal;
 
-const VERSION_V1 = '/v1';
-
 return [
     'router' => [
         'routes' => [
-            'billing-index' => [
+            'billing-send-file' => [
                 'type'    => Literal::class,
                 'options' => [
-                    'route'    => VERSION_V1 . '/billing/send-file',
+                    'route'    => '/v1/billing/send-file',
                     'defaults' => [
                         'controller' => Controller\BillingController::class,
                         'isAuthorizationRequired' => false,
@@ -21,10 +19,22 @@ return [
                     ],
                 ],
             ],
+            'billing-webhook' => [
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/v1/billing/webhook',
+                    'defaults' => [
+                        'controller' => Controller\BillingController::class,
+                        'isAuthorizationRequired' => false,
+                        'action' => 'webhook',
+                        'methodsAuthorization'    => ['POST'],
+                    ],
+                ],
+            ],
             'billing-consumer-files' => [
                 'type'    => Literal::class,
                 'options' => [
-                    'route'    => VERSION_V1 . '/billing/consumer-files',
+                    'route'    => '/v1/billing/consumer-files',
                     'defaults' => [
                         'controller' => Controller\BillingController::class,
                         'isAuthorizationRequired' => false,
@@ -33,15 +43,39 @@ return [
                     ],
                 ],
             ],
-            'billing-webhook' => [
+            'billing-consumer-lines' => [ // @todo review routes to consumers
                 'type'    => Literal::class,
                 'options' => [
-                    'route'    => VERSION_V1 . '/billing/webhook',
+                    'route'    => '/v1/billing/consumer-lines',
                     'defaults' => [
                         'controller' => Controller\BillingController::class,
                         'isAuthorizationRequired' => false,
-                        'action' => 'webhook',
-                        'methodsAuthorization'    => ['POST'],
+                        'action' => 'consumerLines',
+                        'methodsAuthorization'    => ['GET'],
+                    ],
+                ],
+            ],
+            'billing-consumer-emails' => [ // @todo review routes to consumers
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/v1/billing/consumer-emails',
+                    'defaults' => [
+                        'controller' => Controller\BillingController::class,
+                        'isAuthorizationRequired' => false,
+                        'action' => 'consumerEmails',
+                        'methodsAuthorization'    => ['GET'],
+                    ],
+                ],
+            ],
+            'billing-consumer-payments' => [ // @todo review routes to consumers
+                'type'    => Literal::class,
+                'options' => [
+                    'route'    => '/v1/billing/consumer-payments',
+                    'defaults' => [
+                        'controller' => Controller\BillingController::class,
+                        'isAuthorizationRequired' => false,
+                        'action' => 'consumerPayments',
+                        'methodsAuthorization'    => ['GET'],
                     ],
                 ],
             ],

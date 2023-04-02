@@ -32,12 +32,34 @@ class StorageFile
         $uuid4 = Uuid::uuid4();
         $this->uuidStorage = $uuid4->toString();
 
+        $filePath = $this->upload($tmpName);
+        $this->zipFile($filePath);
+
+        return true;
+    }
+
+    /**
+     * @param $tmpName
+     * @return string
+     * @throws Exception
+     */
+    private function upload($tmpName): string
+    {
         $filePath = $this->getFilePath($this->uuidStorage, 'csv');
         $isSendFile = $this->uploadFile($tmpName, $filePath);
         if (!$isSendFile) {
             throw new Exception(self::MESSAGE_FAIL_SEND_FILE);
         }
+        return $filePath;
+    }
 
+    /**
+     * @param string $filePath
+     * @return void
+     * @throws Exception
+     */
+    private function zipFile(string $filePath): void
+    {
         $fileZipPath = $this->getFilePath($this->uuidStorage, 'zip');
         $zip = new ZipArchive();
         if ($zip->open($fileZipPath, ZipArchive::CREATE) !== true) {
@@ -45,11 +67,11 @@ class StorageFile
         }
 
         $entryName = "/{$this->uuidStorage}.csv";
-        $zip->addFile($filePath,$entryName);
+        $zip->addFile($filePath, $entryName);
 
         $zip->close();
 
-        return true;
+        unlink($filePath);
     }
 
     public function uploadFile($tmpName, $filePath): bool
@@ -107,4 +129,8 @@ class StorageFile
         $zip->extractTo('/tmp');
         $zip->close();
     }
+
+
+
+
 }

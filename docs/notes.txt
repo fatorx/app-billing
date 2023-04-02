@@ -13,5 +13,5 @@ PHPUnit
 
 
     vendor/bin/phpunit --testdox --testsuite "Users Test Suite" --group elements
-    vendor/bin/phpunit --testdox --testsuite "Billing Test Suite"
+    vendor/bin/phpunit --testdox --testsuite "Billing Test Suite" --group billing
 
