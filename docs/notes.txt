@@ -5,18 +5,17 @@ Add Controllers: check the file Module.php of the module
 
 docker exec -it app-billing-php-fpm bash
 
+docker exec -it app-billing-php-fpm rm -rf /mnt/api/data/logs/*
+
 PHPUnit
     vendor/bin/phpunit
 
     coverage
         XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html data/report --group billing
 
-
     vendor/bin/phpunit --testdox --testsuite "Users Test Suite" --group elements
     vendor/bin/phpunit --testdox --testsuite "Billing Test Suite" --group billing
     vendor/bin/phpunit --testdox --testsuite "Billing Test Suite" --group service
-
-
 
 Arquivo para load :
     /tmp/test.csv

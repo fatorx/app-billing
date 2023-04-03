@@ -76,7 +76,7 @@ class BillingServiceTest extends TestCase
         $this->expectExceptionMessage('Não foi possível armazenar o arquivo.');
 
         $filePath = '/tmp/test1.csv';
-        $length = $this->getLength($filePath);
+        $length = 0;
 
         $upload = new Parameters([
             'file' => [

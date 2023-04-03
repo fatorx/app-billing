@@ -36,6 +36,7 @@ class PaymentService extends BaseService
         $invoice->setStatus(1);
 
         $payment->setBillingId($invoice->getId());
+        $payment->setStatus(Payment::STATUS_PROCESSED);
 
         $this->em->persist($invoice);
         $this->em->persist($payment);
@@ -61,7 +62,7 @@ class PaymentService extends BaseService
     {
         $repository = $this->em->getRepository(Invoice::class);
         $invoice = $repository->findOneBy(
-            ['debtId' => $debtId, 'status' => 0] // @todo log status
+            ['debtId' => $debtId, 'status' => Payment::STATUS_NOT_PROCESSED]
         );
 
         if ($invoice == null) {

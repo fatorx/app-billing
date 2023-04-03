@@ -2,8 +2,10 @@
 
 namespace Billing\Service;
 
+use Application\Logs\Log;
 use Application\Service\BaseService;
 use Billing\Entity\Invoice;
+use Billing\Storage\FileBill;
 use Billing\Values\MailMessage;
 use Exception;
 
@@ -13,6 +15,8 @@ use Exception;
  */
 class MailService extends BaseService
 {
+    use Log;
+
     const MESSAGE_EXCEPTION_VALUE = 'Valor da fatura inválido.';
 
     /**
@@ -26,7 +30,8 @@ class MailService extends BaseService
         }
 
         $message = $this->composeMessage($invoice);
-        $this->sendMessage($invoice->getEmail(), $message);
+        $fileContents = new FileBill($invoice);
+        $this->sendMessage($invoice->getEmail(), $message, $fileContents->getContentFile());
 
         return true;
     }
@@ -45,13 +50,16 @@ class MailService extends BaseService
                   BODY;
     }
 
-    public function sendMessage(string $email, string $message)
+    public function sendMessage(string $email, string $message, string $fileContents)
     {
-//        echo $this->getDateTime()."\n";
-//        echo $email."\n";
-//        echo $message."\n\n";
+        $blockMessage  = $this->getDateTime() . "\n";
+        $blockMessage .= $email."\n";
+        $blockMessage .= $message."\n\n";
+
+        // @todo $fileContents contains file in base_64
 
         // @todo implement provider
-        // @todo add log email
+
+        $this->addLogMessage($blockMessage, 'emails_sended_');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Billing\Service;
 
+use Application\Logs\Log;
 use Application\Service\BaseService;
 use Billing\Entity\Invoice;
 use Billing\Message\ChannelsConfig;
@@ -10,6 +11,7 @@ use Billing\Storage\StorageFile;
 use Billing\Values\FileMessage;
 use Billing\Values\LineMessage;
 use Exception;
+use MongoDB\Driver\Exception\ExecutionTimeoutException;
 
 /**
  * Class BillingFileService
@@ -17,6 +19,8 @@ use Exception;
  */
 class BillingFileService extends BaseService
 {
+    use Log;
+
     const INDEX_NAME = 0;
     const INDEX_GOVERNMENT = 1;
     const INDEX_EMAIL = 2;
@@ -45,9 +49,10 @@ class BillingFileService extends BaseService
         $lines = $this->storageFile->get($uuid);
         array_shift($lines);
 
-        foreach ($lines as $line) {
+        foreach ($lines as $numberLine => $line) {
             if ($line[self::INDEX_NAME] == null) {
-                // @todo add log
+                $e = new Exception("Linha {$numberLine} do arquivo {$uuid} nula.");
+                $this->addLog($e);
                 continue;
             }
 
@@ -55,7 +60,8 @@ class BillingFileService extends BaseService
             $hydrateInvoice = $this->getDataLine($line);
 
             if (!$isValidLine) {
-                // @todo add log
+                $e = new Exception("Linha {$numberLine} do arquivo {$uuid} inválida.");
+                $this->addLog($e);
                 continue;
             }
 

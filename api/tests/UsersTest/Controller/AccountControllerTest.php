@@ -13,10 +13,6 @@ use Users\Controller\AccountController;
  */
 class AccountControllerTest extends BaseControllerTest
 {
-    private string $module;
-    private string $controllerName;
-    private string $controllerClass;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -116,16 +112,5 @@ class AccountControllerTest extends BaseControllerTest
 
         $this->moduleTest(200, 'user-account/logout');
 
-    }
-
-    private function moduleTest(int $code, string $route)
-    {
-        $this->assertResponseStatusCode($code);
-
-        $this->assertModuleName($this->module);
-        $this->assertControllerName($this->controllerName);
-        $this->assertControllerClass($this->controllerClass);
-
-        $this->assertMatchedRouteName($route);
     }
 }

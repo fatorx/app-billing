@@ -17,6 +17,7 @@ use Laminas\Hydrator\NamingStrategy\UnderscoreNamingStrategy;
 class Payment
 {
     const STATUS_NOT_PROCESSED = 0;
+    const STATUS_PROCESSED = 1;
 
     #[Id]
     #[Column(type: 'integer')]

@@ -3,9 +3,8 @@
 namespace BillingTest\Controller;
 
 use ApplicationTest\Controller\BaseControllerTest;
-use Exception;
 use Billing\Controller\BillingController;
-use Laminas\Http\Headers;
+use Exception;
 use Laminas\Http\Request;
 use Laminas\Stdlib\Parameters;
 
@@ -15,8 +14,6 @@ use Laminas\Stdlib\Parameters;
  */
 class BillingControllerTest extends BaseControllerTest
 {
-
-
     private string $version;
 
     public function setUp(): void
@@ -118,17 +115,6 @@ class BillingControllerTest extends BaseControllerTest
 
         $this->dispatch($route, 'POST');
         $this->moduleTest(400, 'billing-webhook');
-    }
-
-    private function moduleTest(int $code, string $route)
-    {
-        $this->assertResponseStatusCode($code);
-
-        $this->assertModuleName($this->module);
-        $this->assertControllerName($this->controllerName);
-        $this->assertControllerClass($this->controllerClass);
-
-        $this->assertMatchedRouteName($route);
     }
 
     /**
