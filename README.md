@@ -56,7 +56,7 @@ docker-compose up -d --build
 ```
 Access database to create tables (the name app-billing-database is based in the parameter config APP in .env).
 ```shell script
-docker exec -it app-billing-database mysql -u user_db -p -D billings
+docker exec -it app-billing-database mysql -u root -p -D billings
 ```
 After access the docker with above command, at the MySQL prompt type:  
 ```shell script
@@ -127,7 +127,8 @@ docker exec -it app-billing-php-fpm vendor/bin/phpunit --testdox --testsuite "Bi
 ------
 ### Coverage
 ```shell script
-docker exec -it app-billing-php-fpm XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html data/report --group billing
+docker exec -it app-billing-php-fpm bash 
+XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html data/report --group billing
 ```
 
 ------
