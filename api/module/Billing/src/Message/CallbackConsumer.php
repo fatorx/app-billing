@@ -35,8 +35,7 @@ class CallbackConsumer
             $service->process($content);
 
         } catch(Exception $e) {
-            //throw $e;
-            $this->addLog($e->getMessage());
+            $this->addLog($e);
             return false;
         }
 

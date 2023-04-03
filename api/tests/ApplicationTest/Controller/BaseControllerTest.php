@@ -21,6 +21,10 @@ class BaseControllerTest extends AbstractHttpControllerTestCase
 {
     const PATH_CACHE = __DIR__ . '/../../../data/cache';
 
+    protected string $module;
+    protected string $controllerName;
+    protected string $controllerClass;
+
     /**
      * @var array
      */
@@ -184,6 +188,17 @@ class BaseControllerTest extends AbstractHttpControllerTestCase
         $tokenAlgorithm = $config['ApiRequest']['jwtAuth']['tokenAlgorithm'];
 
         return JWT::encode($payload, $cypherKey, $tokenAlgorithm);
+    }
+
+    protected function moduleTest(int $code, string $route)
+    {
+        $this->assertResponseStatusCode($code);
+
+        $this->assertModuleName($this->module);
+        $this->assertControllerName($this->controllerName);
+        $this->assertControllerClass($this->controllerClass);
+
+        $this->assertMatchedRouteName($route);
     }
 
     /**

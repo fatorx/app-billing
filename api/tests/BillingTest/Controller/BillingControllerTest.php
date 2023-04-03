@@ -15,9 +15,7 @@ use Laminas\Stdlib\Parameters;
  */
 class BillingControllerTest extends BaseControllerTest
 {
-    private string $module;
-    private string $controllerName;
-    private string $controllerClass;
+
 
     private string $version;
 

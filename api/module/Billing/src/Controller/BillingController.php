@@ -45,7 +45,7 @@ class BillingController extends ApiController
             $data = [
                 'message' => $e->getMessage()
             ];
-            $this->addLog($e->getMessage(), 'send_file_');
+            $this->addLog($e, 'send_file_');
         }
 
         return $this->createResponse($data);
@@ -56,7 +56,7 @@ class BillingController extends ApiController
         try {
             $status = $this->service->consumerFiles();
         } catch (Exception $e) {
-            $this->addLog($e->getMessage());
+            $this->addLog($e);
         }
     }
 
@@ -65,7 +65,7 @@ class BillingController extends ApiController
         try {
             $status = $this->service->consumerLines();
         } catch (Exception $e) {
-            $this->addLog($e->getMessage());
+            $this->addLog($e);
         }
     }
 
@@ -74,7 +74,7 @@ class BillingController extends ApiController
         try {
             $status = $this->service->consumerEmails();
         } catch (Exception $e) {
-            $this->addLog($e->getMessage());
+            $this->addLog($e);
         }
     }
 
@@ -83,7 +83,7 @@ class BillingController extends ApiController
         try {
             $status = $this->service->consumerPayments();
         } catch (Exception $e) {
-            $this->addLog($e->getMessage());
+            $this->addLog($e);
         }
     }
 
@@ -102,7 +102,7 @@ class BillingController extends ApiController
             $data = [
                 'message' => $e->getMessage()
             ];
-            $this->addLog($e->getMessage(), 'webhoook_');
+            $this->addLog($e, 'webhoook_');
         }
 
         return $this->createResponse($data);
