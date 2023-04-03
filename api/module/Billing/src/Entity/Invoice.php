@@ -99,14 +99,6 @@ class Invoice
     }
 
     /**
-     * @param int|null $id
-     */
-    public function setId(?int $id): void
-    {
-        $this->id = $id;
-    }
-
-    /**
      * @return string
      */
     public function getName(): string
@@ -232,26 +224,10 @@ class Invoice
     }
 
     /**
-     * @param DateTime $createdAt
-     */
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
      * @return DateTime
      */
     public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
-    }
-
-    /**
-     * @param DateTime $updatedAt
-     */
-    public function setUpdatedAt(DateTime $updatedAt): void
-    {
-        $this->updatedAt = $updatedAt;
     }
 }

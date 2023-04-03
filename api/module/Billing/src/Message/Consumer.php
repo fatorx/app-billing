@@ -11,6 +11,7 @@ class Consumer
 {
     const DEFAULT_CHANNEL = 'files';
 
+    private bool $startService = false;
     private AMQPStreamConnection $connection;
 
     private CallbackConsumer $callBackConsumer;
@@ -42,6 +43,7 @@ class Consumer
             false, false,
             $this->callBackConsumer);
 
+        $this->startService = true;
         while ($channel->is_open()) {
             $channel->wait();
         }

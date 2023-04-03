@@ -103,7 +103,7 @@ class LineMessageTest extends TestCase
             'email' => 'charlesdickens@kanastra.com.br',
             'amount' => '10.00',
             'due_date' => '2023-03-30',
-            'debt_id' => (int)6566,
+            'debt_id' => 6566,
         ];
     }
 }

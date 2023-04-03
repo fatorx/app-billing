@@ -38,7 +38,7 @@ Access database to create tables (the name app-billing-database is based in the 
 ```shell script
 docker exec -it app-billing-database mysql -u root -p -D billings
 ```
-After access the docker with above command:  
+After access the docker with above command, at the MySQL prompt type:  
 ```shell script
 source /tmp/dump.sql
 ```

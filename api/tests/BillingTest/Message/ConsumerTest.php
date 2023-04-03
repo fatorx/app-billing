@@ -40,9 +40,7 @@ class ConsumerTest extends TestCase
      */
     public function testWaitingMessages()
     {
-        //$this->fail('Not implement method WaitingMessages');
-
-        //$this->consumer->waitingMessages(ChannelsConfig::FILES);
-        //$this->assertTrue($status);
+        $this->consumer->waitingMessages(ChannelsConfig::FILES);
+        $this->assertTrue($status);
     }
 }
