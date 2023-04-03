@@ -11,6 +11,8 @@ class PostFile
     const MESSAGE_INVALID_FORMAT = 'Formato de arquivo inválido (permitido somente no formato CSV).';
     const MESSAGE_INVALID_LENGTH = 'O arquivo enviado possui %2f MB. O máximo permitido: %2f MB.';
 
+    const EXCEPTION_CODE_SIZE = 3002;
+
     const LIMIT_LENGTH = 1024000;
 
     protected Parameters $data;
@@ -50,7 +52,7 @@ class PostFile
             $limit = self::LIMIT_LENGTH / 1000000;
 
             $message = sprintf(self::MESSAGE_INVALID_LENGTH, $size, $limit);
-            throw new Exception($message);
+            throw new Exception($message, self::EXCEPTION_CODE_SIZE);
         }
     }
 

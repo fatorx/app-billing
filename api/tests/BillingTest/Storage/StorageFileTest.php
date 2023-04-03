@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 class StorageFileTest extends TestCase
 {
     private string $pathStorage = '/mnt/api/data/storage';
-    private string $pathFileTest = '/tmp/test.csv';
     private string $uuidFile = '9c4021a8-5ab9-42c8-8395-7113907ad457';
 
     public function setUp(): void
@@ -44,7 +43,7 @@ class StorageFileTest extends TestCase
         $storage = new StorageFile('1234-1234-121231231');
 
         $tmpName = '/tmp/file_tmp.csv';
-        @$storage->zipFile($tmpName);
+        $storage->zipFile($tmpName);
     }
 
     /**
@@ -73,16 +72,15 @@ class StorageFileTest extends TestCase
         $storage = new StorageFile();
         $pathFile = '123.zip';
         $storage->extracted($pathFile);
-
-
     }
-
 
     public function tearDown(): void
     {
         parent::tearDown();
 
-        @unlink($this->pathStorage . '/' . $this->uuidFile . '.zip');
-        chmod($this->pathStorage, 777);
+        $pathZip = $this->pathStorage . '/' . $this->uuidFile . '.zip';
+        if (is_file($pathZip)) {
+            unlink($pathZip);
+        }
     }
 }

@@ -26,7 +26,7 @@ class CallbackConsumer
     public function __invoke($message): void
     {
         try {
-
+            echo '<pre>'; var_dump($message); exit();
             $content = unserialize($message->body); // @todo check type
             $service = $this->serviceManager->get($content->getType());
             $service->process($content);

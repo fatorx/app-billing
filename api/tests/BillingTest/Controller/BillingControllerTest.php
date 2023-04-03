@@ -104,6 +104,24 @@ class BillingControllerTest extends BaseControllerTest
         $this->moduleTest(200, 'billing-webhook');
     }
 
+    /**
+     * @throws Exception
+     */
+    public function testWebHookException()
+    {
+        $route = $this->version . '/billing/webhook';
+
+        $sendData = [
+            'debtId' => '123',
+            'paidAt' => '2022-06-09 10:00:00',
+            'paidAmount' => 101.25
+        ];
+        $this->configurePostJson($sendData);
+
+        $this->dispatch($route, 'POST');
+        $this->moduleTest(400, 'billing-webhook');
+    }
+
     private function moduleTest(int $code, string $route)
     {
         $this->assertResponseStatusCode($code);

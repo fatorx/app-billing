@@ -5,6 +5,7 @@ namespace Billing\Storage;
 use Billing\Values\PostFile;
 use Exception;
 use Ramsey\Uuid\Uuid;
+use RuntimeException;
 use SplFileObject;
 use ZipArchive;
 
@@ -105,19 +106,23 @@ class StorageFile
      */
     public function get(string $uuid, $ext = 'zip'): array
     {
-        $pathFile = $this->path = getcwd() . "/data/storage/{$uuid}.{$ext}" ;
-        $fileObject = new SplFileObject($pathFile);
-
         $list = [];
-        if ($fileObject->isFile()) {
-            $this->extracted($pathFile);
+        try {
+            $pathFile = $this->path = getcwd() . "/data/storage/{$uuid}.{$ext}" ;
+            $fileObject = new SplFileObject($pathFile);
 
-            $pathTmp = "/tmp/{$uuid}.csv";
-            $fileExtract = new SplFileObject($pathTmp);
+            if ($fileObject->isFile()) {
+                $this->extracted($pathFile);
 
-            while (!$fileExtract->eof()) {
-                $list[] = $fileExtract->fgetcsv();
+                $pathTmp = "/tmp/{$uuid}.csv";
+                $fileExtract = new SplFileObject($pathTmp);
+
+                while (!$fileExtract->eof()) {
+                    $list[] = $fileExtract->fgetcsv();
+                }
             }
+        } catch(RuntimeException $e) {
+            echo $e->getMessage();
         }
 
         return $list;

@@ -28,7 +28,7 @@ class BillingFileService extends BaseService
     private Producer $producer;
 
     /**
-     * StorageFile constructor.
+     * BillingFileService constructor.
      */
     public function __construct(StorageFile $storageFile, Producer $producer)
     {
@@ -39,7 +39,7 @@ class BillingFileService extends BaseService
     /**
      * @throws Exception
      */
-    public function process(FileMessage $fileMessage)
+    public function process(FileMessage $fileMessage): bool
     {
         $uuid = $fileMessage->getUuid();
         $lines = $this->storageFile->get($uuid);
@@ -68,13 +68,15 @@ class BillingFileService extends BaseService
             $messageLog = $dateTime . " - Process invoice file line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
             printf($messageLog);
         }
+
+        return true;
     }
 
     public function validateLine(array $line): bool
     {
         return !(empty($line[self::INDEX_NAME]) || empty($line[self::INDEX_EMAIL]) ||
-                empty($line[self::INDEX_AMOUNT]) || empty($line[self::INDEX_DUE_DATE]) ||
-                empty($line[self::INDEX_DEBT]));
+            empty($line[self::INDEX_AMOUNT]) || empty($line[self::INDEX_DUE_DATE]) ||
+            empty($line[self::INDEX_DEBT]));
     }
 
     /**

@@ -13,14 +13,22 @@ use Exception;
  */
 class MailService extends BaseService
 {
+    const MESSAGE_EXCEPTION_VALUE = 'Valor da fatura inválido.';
+
     /**
      * @throws Exception
      */
-    public function process(MailMessage $mailMessage)
+    public function process(MailMessage $mailMessage): true
     {
         $invoice = $mailMessage->getInvoice();
+        if ($invoice->getAmount() == 0) {
+            throw new Exception(self::MESSAGE_EXCEPTION_VALUE);
+        }
+
         $message = $this->composeMessage($invoice);
         $this->sendMessage($invoice->getEmail(), $message);
+
+        return true;
     }
 
     public function composeMessage(Invoice $invoice): string
@@ -39,10 +47,11 @@ class MailService extends BaseService
 
     public function sendMessage(string $email, string $message)
     {
-        echo $this->getDateTime()."\n";
-        echo $email."\n";
-        echo $message."\n\n";
+//        echo $this->getDateTime()."\n";
+//        echo $email."\n";
+//        echo $message."\n\n";
 
+        // @todo implement provider
         // @todo add log email
     }
 }
