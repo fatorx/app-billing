@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2021 Fabio de Souza
+Copyright (c) 2023 Fabio de Souza
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

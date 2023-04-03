@@ -45,6 +45,8 @@ class Consumer
         while ($channel->is_open()) {
             $channel->wait();
         }
+
+        $channel->close();
     }
 
 

@@ -91,10 +91,6 @@ docker exec -it app-billing-php-fpm bash
 ```
 And then do this
 ```shell script
-vendor/bin/phpunit --testdox
-```
-or
-```shell script
 vendor/bin/phpunit --testdox --testsuite "Billing Test Suite"
 ```
 or 
@@ -105,7 +101,7 @@ vendor/bin/phpunit --testdox --testsuite "Billing Test Suite" --group billing
 ------
 ### Tests Outside Docker
 ```shell script
-docker exec -it app-billing-php-fpm bash vendor/bin/phpunit --testdox
+docker exec -it app-billing-php-fpm vendor/bin/phpunit --testdox --testsuite "Billing Test Suite"
 ```
 ------
 ## Licence
