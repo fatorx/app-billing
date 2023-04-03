@@ -47,7 +47,7 @@ cp .env.dist .env
 
 Configure environment to local application.
 ```shell script
-cp api/autoload/local.php.dist api/autoload/local.php 
+cp api/config/autoload/local.php.dist api/config/autoload/local.php 
 ```
 
 Add permissions to folder data (MySQL and RabbitMQ) and api/data (logs, storage files), this is where the persistence files will be kept.
