@@ -4,11 +4,7 @@ This system aims to control billings and manage payments of these billings.
 
 ------
 
-## Technologies
 
-- PHP (Laminas)
-- MySQL 
-- RabbitMQ 
 
 ## Functionalities
 
@@ -22,14 +18,23 @@ This system aims to control billings and manage payments of these billings.
 
 ```mermaid
     sequenceDiagram
-    ReceiveFile ->> EndPoint: Sended CSV
+    ReceiveFile ->> EndPoint: Send CSV
     EndPoint ->> Storage: Send Zip File
-    Storage ->> EndPoint: Key UUID to File
-    EndPoint ->> ReceiveFile: Key UUID File
+    Storage ->> EndPoint: Send Key UUID File
+    EndPoint ->> ReceiveFile: Return Key UUID File
     EndPoint ->> ProducerFile: Send UUID as a Message
     ProducerFile -) ConsumerFile: A serialized PHP object
 ````
 ------
+
+## Technologies
+
+- PHP (Laminas)
+- MySQL
+- RabbitMQ
+
+------
+
 ## Instructions for run this app:
 
 ### First time
