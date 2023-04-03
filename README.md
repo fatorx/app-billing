@@ -18,7 +18,19 @@ This system aims to control billings and manage payments of these billings.
 - 
 ------
 
-### Instructions for run this app:
+## Sequence Receive File
+
+```mermaid
+    sequenceDiagram
+    ReceiveFile ->> EndPoint: Sended CSV
+    EndPoint ->> ReceiveFile: Key UUID File
+    EndPoint ->> Storage: Send Zip File
+    Storage ->> EndPoint: Key UUID to File
+    EndPoint ->> ProducerFile: Send UUID as a Message
+    ProducerFile -->> ConsumerFile: A serialized PHP object
+````
+------
+## Instructions for run this app:
 
 ### First time
 
@@ -107,3 +119,5 @@ docker exec -it app-billing-php-fpm vendor/bin/phpunit --testdox --testsuite "Bi
 ## Licence
 
 [MIT](https://github.com/fatorx/php-gamer/blob/main/LICENSE.md)
+
+

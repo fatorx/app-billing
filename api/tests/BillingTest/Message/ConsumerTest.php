@@ -5,9 +5,8 @@ namespace BillingTest\Message;
 use ApplicationTest\Util\ApplicationTestTrait;
 use Billing\Message\ChannelsConfig;
 use Billing\Message\Consumer;
-use Billing\Message\Producer;
-use Billing\Values\FileMessage;
 use Exception;
+use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -40,7 +39,19 @@ class ConsumerTest extends TestCase
      */
     public function testWaitingMessages()
     {
-        $this->consumer->waitingMessages(ChannelsConfig::FILES);
-        $this->assertTrue($status);
+        $this->consumer->waitingMessages();
+        $statusService = $this->consumer->getStartService();
+
+        $this->assertTrue($statusService);
+    }
+
+    /**
+     * @throws AMQPTimeoutException
+     */
+    public function testWaitMessagesException()
+    {
+        $this->expectExceptionMessage('The connection timed out after 1 sec while awaiting incoming data');
+
+        $this->consumer->waitingMessages(ChannelsConfig::FILES, 1);
     }
 }
