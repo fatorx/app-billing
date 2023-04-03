@@ -23,11 +23,11 @@ This system aims to control billings and manage payments of these billings.
 ```mermaid
     sequenceDiagram
     ReceiveFile ->> EndPoint: Sended CSV
-    EndPoint ->> ReceiveFile: Key UUID File
     EndPoint ->> Storage: Send Zip File
     Storage ->> EndPoint: Key UUID to File
+    EndPoint ->> ReceiveFile: Key UUID File
     EndPoint ->> ProducerFile: Send UUID as a Message
-    ProducerFile -->> ConsumerFile: A serialized PHP object
+    ProducerFile -) ConsumerFile: A serialized PHP object
 ````
 ------
 ## Instructions for run this app:
