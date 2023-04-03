@@ -17,12 +17,14 @@ This system aims to control billings and manage payments of these billings.
 
 ```mermaid
     sequenceDiagram
-    ReceiveFile ->> EndPoint: Send CSV
+    ReceiveFile->>EndPoint: Send CSV
+    activate EndPoint
     EndPoint ->> Storage: Send Zip File
     Storage ->> EndPoint: Send Key UUID File
     EndPoint ->> ReceiveFile: Return Key UUID File
     EndPoint ->> ProducerFile: Send UUID as a Message
-    ProducerFile -) ConsumerFile: Send a serialized PHP object
+    ProducerFile ->> MessageBroker: Send UUID as a Message
+    MessageBroker -) ConsumerFile: Send a serialized PHP object
 ````
 ------
 ### Technologies
