@@ -45,9 +45,15 @@ Copy .env.dist to .env and adjust values in the .env file to your preferences.
 cp .env.dist .env 
 ```
 
-Add permissions to folder data, this is where the persistence files will be kept.
+Configure environment to local application.
+```shell script
+cp api/autoload/local.php.dist api/autoload/local.php 
+```
+
+Add permissions to folder data (MySQL and RabbitMQ) and api/data (logs, storage files), this is where the persistence files will be kept.
 ```shell script
 chmod 755 data
+chmod 755 api/data
 ```
 
 Mount the environment based in docker-compose.yml.
