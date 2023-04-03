@@ -21,6 +21,8 @@ class BillingLineService extends BaseService
 
     private Producer $producer;
 
+    private bool $stdOut = true;
+
     public function __construct(Producer $producer)
     {
         $this->producer = $producer;
@@ -36,13 +38,20 @@ class BillingLineService extends BaseService
         if (!$this->checkDebtId($invoice)) {
             $dateTime = $this->getDateTime();
             $messageLog = $dateTime . " - No process invoice line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
-            printf($messageLog);
 
-            throw new Exception(self::MESSAGE_EXCEPTION_DEBT_CHECK);
+            if ($this->stdOut) {
+                printf($messageLog);
+            }
+
+            $e = new Exception(self::MESSAGE_EXCEPTION_DEBT_CHECK);
+            $this->addLog($e);
+            throw $e;
         }
 
         if ($invoice->getAmount() == 0) {
-            throw new Exception(self::MESSAGE_EXCEPTION_VALUE);
+            $e = new Exception(self::MESSAGE_EXCEPTION_VALUE);
+            $this->addLog($e);
+            throw $e;
         }
 
         $this->em->persist($invoice);
@@ -50,13 +59,25 @@ class BillingLineService extends BaseService
 
         $dateTime = $this->getDateTime();
         $messageLog = $dateTime . " - Process invoice line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
-        printf($messageLog);
+        $this->addLogMessage($messageLog, 'lines_billings');
+
+        if ($this->stdOut) {
+            printf($messageLog);
+        }
 
         $mailMessage = new MailMessage($invoice);
         $this->producer->createMessage($mailMessage->getMessage(), ChannelsConfig::EMAILS);
 
 
         return true;
+    }
+
+    /**
+     * @param bool $stdOut
+     */
+    public function setStdOut(bool $stdOut): void
+    {
+        $this->stdOut = $stdOut;
     }
 
     public function checkDebtId(Invoice $invoice): bool

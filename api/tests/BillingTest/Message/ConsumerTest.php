@@ -32,8 +32,9 @@ class ConsumerTest extends TestCase
 
         /** @var Consumer $consumer */
         $this->consumer = $this->getApplicationServiceLocator()->get(Consumer::class);
+        $this->consumer->setStdOut(false);
     }
-
+    
     /**
      * @throws Exception
      */

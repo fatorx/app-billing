@@ -26,7 +26,9 @@ class MailService extends BaseService
     {
         $invoice = $mailMessage->getInvoice();
         if ($invoice->getAmount() == 0) {
-            throw new Exception(self::MESSAGE_EXCEPTION_VALUE);
+            $e = new Exception(self::MESSAGE_EXCEPTION_VALUE);
+            $this->addLog($e);
+            throw $e;
         }
 
         $message = $this->composeMessage($invoice);

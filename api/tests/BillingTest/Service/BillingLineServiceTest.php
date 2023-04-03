@@ -37,6 +37,7 @@ class BillingLineServiceTest extends TestCase
 
         /** @var  BillingLineService $this->service */
         $this->service = $this->getApplicationServiceLocator()->get(BillingLineService::class);
+        $this->service->setStdOut(false);
 
         $this->data = [
             'name' => '',

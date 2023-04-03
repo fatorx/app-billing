@@ -11,7 +11,6 @@ use Billing\Storage\StorageFile;
 use Billing\Values\FileMessage;
 use Billing\Values\LineMessage;
 use Exception;
-use MongoDB\Driver\Exception\ExecutionTimeoutException;
 
 /**
  * Class BillingFileService
@@ -31,6 +30,8 @@ class BillingFileService extends BaseService
     private StorageFile $storageFile;
     private Producer $producer;
 
+    private bool $stdOut = true;
+
     /**
      * BillingFileService constructor.
      */
@@ -38,6 +39,14 @@ class BillingFileService extends BaseService
     {
         $this->storageFile = $storageFile;
         $this->producer = $producer;
+    }
+
+    /**
+     * @param bool $stdOut
+     */
+    public function setStdOut(bool $stdOut): void
+    {
+        $this->stdOut = $stdOut;
     }
 
     /**
@@ -72,7 +81,11 @@ class BillingFileService extends BaseService
 
             $dateTime = $this->getDateTime();
             $messageLog = $dateTime . " - Process invoice file line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
-            printf($messageLog);
+            $this->addLogMessage($messageLog, 'files_lines_');
+
+            if ($this->stdOut) {
+                printf($messageLog);
+            }
         }
 
         return true;

@@ -44,6 +44,7 @@ class BillingFileServiceTest extends TestCase
 
         /** @var  BillingFileService $this->service */
         $this->service = $this->getApplicationServiceLocator()->get(BillingFileService::class);
+        $this->service->setStdOut(false);
     }
 
     /**

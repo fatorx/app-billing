@@ -17,6 +17,8 @@ class Consumer
 
     private CallbackConsumer $callBackConsumer;
 
+    private bool $stdOut = true;
+
     /**
      * @throws Exception
      */
@@ -26,10 +28,21 @@ class Consumer
         $this->callBackConsumer = new CallbackConsumer($serviceManager); // @todo review callback
     }
 
+    /**
+     * @param bool $stdOut
+     */
+    public function setStdOut(bool $stdOut): void
+    {
+        $this->stdOut = $stdOut;
+    }
+
     public function waitingMessages(string $channelName = self::DEFAULT_CHANNEL, int $timeout = 0): void
     {
         $channel = $this->configureChannel($channelName);
-        $this->displayMessage($channelName);
+
+        if ($this->stdOut) {
+            $this->displayMessage($channelName);
+        }
 
         $this->startService = true;
         while ($channel->is_open()) {
