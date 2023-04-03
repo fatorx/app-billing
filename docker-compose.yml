@@ -22,7 +22,8 @@ services:
       - ./api:/mnt/api/
       - ./docker/php-fpm/php-ini-overrides.local.ini:/etc/php/8.2/fpm/conf.d/99-overrides.ini
       - .env:/mnt/api/.env
-      - ./docs/test.csv:/tmp/test.csv
+      - ./docs/tests/test.csv:/tmp/test.csv
+      - ./docs/tests/9c4021a8-5ab9-42c8-8395-7113907ad457.zip:/tmp/9c4021a8-5ab9-42c8-8395-7113907ad457.zip
     environment:
       ALPINE_VERSION: ${ALPINE_VERSION}
       COMPOSER_VERSION: ${COMPOSER_VERSION}

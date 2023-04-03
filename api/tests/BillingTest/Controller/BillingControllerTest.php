@@ -40,14 +40,14 @@ class BillingControllerTest extends BaseControllerTest
         /** @var Request $request */
         $request = $this->getRequest();
 
-        $content = file_get_contents('/tmp/test.csv');
-        $length = strlen($content);
+        $filePath = '/tmp/test.csv';
+        $length = $this->getLength($filePath);
 
         $upload = new Parameters([
             'file' => [
                 'name' => 'file.csv',
                 'type' => 'text/csv',
-                'tmp_name' => '/tmp/test.csv',
+                'tmp_name' => $filePath,
                 'error' => 0,
                 'size' => $length
             ]
@@ -73,7 +73,8 @@ class BillingControllerTest extends BaseControllerTest
                 'name' => 'blah.blah',
                 'type' => 'blah',
                 'tmp_name' => '/tmp/blah',
-                'error' => 0
+                'error' => 0,
+                'size' => 0
             ]
         ]);
         $request->setFiles($upload);
@@ -84,15 +85,24 @@ class BillingControllerTest extends BaseControllerTest
         $this->moduleTest(400, 'billing-send-file');
     }
 
+    /**
+     * @throws Exception
+     */
     public function testWebHook()
     {
-        $route = $this->version . '/billing/send-file';
+        $route = $this->version . '/billing/webhook';
+
+        $sendData = [
+            'debtId' => '123',
+            'paidAt' => '2022-06-09 10:00:00',
+            'paidAmount' => 101.25,
+            'paidBy' => 'John Doe'
+        ];
+        $this->configurePostJson($sendData);
 
         $this->dispatch($route, 'POST');
-        $this->moduleTest(400, 'billing-webhook');
+        $this->moduleTest(200, 'billing-webhook');
     }
-    // /v1/billing/webhook
-
 
     private function moduleTest(int $code, string $route)
     {
@@ -103,5 +113,15 @@ class BillingControllerTest extends BaseControllerTest
         $this->assertControllerClass($this->controllerClass);
 
         $this->assertMatchedRouteName($route);
+    }
+
+    /**
+     * @param string $file
+     * @return int
+     */
+    private function getLength(string $file): int
+    {
+        $content = file_get_contents($file);
+        return strlen($content);
     }
 }

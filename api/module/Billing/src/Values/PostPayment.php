@@ -5,7 +5,6 @@ namespace Billing\Values;
 use DateTime;
 use Exception;
 use Laminas\Validator\Date;
-use Laminas\Validator\Digits;
 
 class PostPayment
 {
@@ -13,7 +12,7 @@ class PostPayment
     const MESSAGE_EXCEPTION_FIELD_NULL = 'O campo %s não pode ser nulo.';
     const MESSAGE_EXCEPTION_DEBT_ID_INVALID = 'O campo debtId ser deve ser um inteiro.';
     const MESSAGE_EXCEPTION_DATE_INVALID = 'O campo paidAt deve ser enviado no formato 0000-00-00 00:00:00';
-    const MESSAGE_EXCEPTION_PAID_AT_INVALID = 'O campo paidAt deve ser número. Ex: 123.56';
+    const MESSAGE_EXCEPTION_PAID_AMOUNT_INVALID = 'O campo paidAmount deve ser númerico. Ex: 123.56';
 
     const FIELDS = ['debtId', 'paidAt', 'paidAmount', 'paidBy'];
 
@@ -57,7 +56,6 @@ class PostPayment
         }
 
         $this->validDate();
-
         $this->validAmount();
 
         if ($this->data['paidBy'] == '') {
@@ -94,10 +92,9 @@ class PostPayment
      */
     private function validAmount(): void
     {
-        $validDigits = new Digits();
-        $isValidAmount = $validDigits->isValid($this->data['paidAmount']);
-        if (!$isValidAmount) {
-            throw new Exception(self::MESSAGE_EXCEPTION_PAID_AT_INVALID);
+        $value = $this->data['paidAmount'];
+        if (!is_float($value)) {
+            throw new Exception(self::MESSAGE_EXCEPTION_PAID_AMOUNT_INVALID);
         }
     }
 }

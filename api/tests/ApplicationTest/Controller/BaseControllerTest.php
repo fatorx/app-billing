@@ -135,7 +135,8 @@ class BaseControllerTest extends AbstractHttpControllerTestCase
         $request = $this->getRequest();
         $request->setHeaders($headers);
 
-        $request->setMethod('POST')->setContent( Json::encode($postData)) ;
+        $postJson = Json::encode($postData);
+        $request->setMethod('POST')->setContent( $postJson ) ;
     }
 
     /**

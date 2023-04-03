@@ -3,6 +3,7 @@
 namespace Billing\Service;
 
 use Application\Service\BaseService;
+use Billing\Entity\Invoice;
 use Billing\Message\ChannelsConfig;
 use Billing\Message\Producer;
 use Billing\Values\LineMessage;
@@ -29,15 +30,29 @@ class BillingLineService extends BaseService
     {
         $invoice = $lineMessage->getInvoice();
 
-        // @todo add valid enter
-        $this->em->persist($invoice);
-        $this->em->flush();
+        if ($this->checkDebtId($invoice)) {
 
-        $dateTime = $this->getDateTime();
-        $messageLog = $dateTime . " - Process invoice line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
-        printf($messageLog);
+            $this->em->persist($invoice);
+            $this->em->flush();
 
-        $mailMessage = new MailMessage($invoice);
-        $this->producer->createMessage($mailMessage->getMessage(), ChannelsConfig::EMAILS);
+            $dateTime = $this->getDateTime();
+            $messageLog = $dateTime . " - Process invoice line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
+            printf($messageLog);
+
+            $mailMessage = new MailMessage($invoice);
+            $this->producer->createMessage($mailMessage->getMessage(), ChannelsConfig::EMAILS);
+        } else {
+            $dateTime = $this->getDateTime();
+            $messageLog = $dateTime . " - No process invoice line: {$invoice->getDebtId()} - {$invoice->getEmail()}\n";
+            printf($messageLog);
+        }
+    }
+
+    public function checkDebtId(Invoice $invoice): bool
+    {
+        $invoiceCheck = $this->em->getRepository($invoice::class)
+                                 ->findOneBy(['debtId' => $invoice->getDebtId()]);
+
+        return ($invoiceCheck == null);
     }
 }

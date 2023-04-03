@@ -70,11 +70,7 @@ class Payment
         $hydrator = new ClassMethodsHydrator(false);
         $hydrator->setNamingStrategy(new UnderscoreNamingStrategy());
 
-        $dueDate = new DateTime($input['paid_at']);
-        unset($input['paid_at']);
-
         $hydrator->hydrate($input, $this);
-        $this->setPaidAt($dueDate);
     }
 
     /**

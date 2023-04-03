@@ -9,7 +9,7 @@ PHPUnit
     vendor/bin/phpunit
 
     coverage
-        XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html data/report
+        XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html data/report --group billing
 
 
     vendor/bin/phpunit --testdox --testsuite "Users Test Suite" --group elements
