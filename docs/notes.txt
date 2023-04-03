@@ -16,3 +16,7 @@ PHPUnit
     vendor/bin/phpunit --testdox --testsuite "Billing Test Suite" --group billing
     vendor/bin/phpunit --testdox --testsuite "Billing Test Suite" --group service
 
+
+
+Arquivo para load :
+    /tmp/test.csv

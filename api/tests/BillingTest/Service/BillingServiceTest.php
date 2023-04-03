@@ -15,6 +15,7 @@ use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @group billing
+ * @group service
  */
 class BillingServiceTest extends TestCase
 {
@@ -66,6 +67,36 @@ class BillingServiceTest extends TestCase
     }
 
     /**
+     * @throws Exception
+     */
+    public function testStorageFileNull()
+    {
+        $this->configHhandlerError();
+
+        $this->expectExceptionMessage('Não foi possível armazenar o arquivo.');
+
+        $filePath = '/tmp/test1.csv';
+        $length = $this->getLength($filePath);
+
+        $upload = new Parameters([
+            'file' => [
+                'name' => 'file.csv',
+                'type' => 'text/csv',
+                'tmp_name' => $filePath,
+                'error' => 0,
+                'size' => $length
+            ]
+        ]);
+
+        $postFile = new PostFile($upload);
+
+        $uuid = @$this->service->storage($postFile);
+        $this->assertEmpty($uuid);
+
+        restore_error_handler();
+    }
+
+    /**
      * @param string $file
      * @return int
      */
@@ -90,5 +121,22 @@ class BillingServiceTest extends TestCase
         $isTrue = $this->service->confirmPayment($postPayment);
 
         $this->assertTrue($isTrue);
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    private function configHhandlerError(): void
+    {
+        set_error_handler(
+            /**
+             * @throws Exception
+             */
+            static function (int $errno, string $errstr): never {
+                throw new Exception($errstr, $errno);
+            },
+            E_USER_WARNING
+        );
     }
 }

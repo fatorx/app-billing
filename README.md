@@ -11,10 +11,9 @@ This system aims to control billings and manage payments of these billings.
 - Receive CSV files and generate "bills" based on the data
 - Send emails charging bills
 - Receive and process payments for bills via webhook
-- 
 ------
 
-## Sequence Receive File
+### Sequence Receive File
 
 ```mermaid
     sequenceDiagram
@@ -23,15 +22,13 @@ This system aims to control billings and manage payments of these billings.
     Storage ->> EndPoint: Send Key UUID File
     EndPoint ->> ReceiveFile: Return Key UUID File
     EndPoint ->> ProducerFile: Send UUID as a Message
-    ProducerFile -) ConsumerFile: A serialized PHP object
+    ProducerFile -) ConsumerFile: Send a serialized PHP object
 ````
 ------
-
-## Technologies
-
-- PHP (Laminas)
-- MySQL
-- RabbitMQ
+### Technologies
+- PHP 8.2 with Laminas
+- MySQL 8.0.32
+- RabbitMQ 3.10.1
 
 ------
 
@@ -68,14 +65,14 @@ docker-compose up -d
 ------
 
 ### Access to environment
-
+###
 Test to send a file:
 ```shell script
 curl --location '0.0.0.0:8009/v1/billing/send-file' \
 --form 'file=@"/home/yourpath/projects/app-billing/temp/test_length_ok.csv"'
 ```
-
-Test to send a request to webhook:
+###
+Test to send a request to webhook (file size limited in 1MB):
 ```shell script
 curl --location '0.0.0.0:8009/v1/billing/webhook' \
      --header 'Content-Type: application/json' \

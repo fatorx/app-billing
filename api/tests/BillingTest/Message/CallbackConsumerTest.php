@@ -47,6 +47,14 @@ class CallbackConsumerTest extends TestCase
         $callback($msg);
     }
 
+    public function testInvoqueEmpty()
+    {
+        $callback = $this->getClassTarget();
+        $status = $callback('');
+
+        $this->assertFalse($status);
+    }
+
     /**
      * @throws Exception
      */

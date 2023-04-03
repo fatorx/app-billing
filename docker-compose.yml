@@ -30,19 +30,6 @@ services:
     ports:
       - "8000:8000"
 
-  redis:
-    image: redis:alpine
-    container_name: ${APP}-redis
-
-  adminredis:
-    image: erikdubbelboer/phpredisadmin
-    container_name: ${APP}-admin-redis
-    environment:
-      - REDIS_1_HOST=redis
-      - REDIS_1_NAME=AppRedis
-    ports:
-      - "8097:80"
-
   database:
     image: mysql:8.0.32
     container_name: ${APP}-database

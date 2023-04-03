@@ -1,3 +1,1 @@
 
-Arquivo para load :
-    /tmp/test.csv

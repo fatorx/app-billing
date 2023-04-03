@@ -1,7 +1,8 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 namespace Billing\Message;
 
+use Application\Logs\Log;
 use Exception;
 use Laminas\ServiceManager\ServiceManager;
 use Psr\Container\ContainerExceptionInterface;
@@ -9,6 +10,8 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class CallbackConsumer
 {
+    use Log;
+
     private ServiceManager $serviceManager;
 
     /**
@@ -22,8 +25,9 @@ class CallbackConsumer
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws Exception
      */
-    public function __invoke($message): void
+    public function __invoke($message): bool
     {
         try {
             $content = unserialize($message->body); // @todo check type
@@ -31,11 +35,12 @@ class CallbackConsumer
             $service->process($content);
 
         } catch(Exception $e) {
-            echo $e->getMessage();
-            // @todo add log to options
+            //throw $e;
+            $this->addLog($e->getMessage());
+            return false;
         }
 
         $message->ack();
-        // @todo remove message
+        return true;
     }
 }

@@ -14,7 +14,7 @@ trait Log
      * @param $message
      * @param string $prefix
      */
-    public function logError($message, string $prefix = 'error_'): void
+    public function addLog($message, string $prefix = 'error_'): void
     {
         $date = new Datetime();
 
@@ -27,7 +27,7 @@ trait Log
 
         // add records to the log
         $headers = getallheaders();
-        $clientIp = ($headers['X-Forwarded-For'] ?? 'null');
+        $clientIp = ($headers['X-Forwarded-For'] ?? 'NO IP');
         $log->error($clientIp . ' - ' . $message);
     }
 }

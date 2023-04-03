@@ -9,7 +9,7 @@ class PostFile
 {
     const MESSAGE_INVALID_FILE = 'Arquivo não enviado.';
     const MESSAGE_INVALID_FORMAT = 'Formato de arquivo inválido (permitido somente no formato CSV).';
-    const MESSAGE_INVALID_LENGTH = 'O arquivo enviado possui %2f MB. O máximo permitido: %2f MB.';
+    const MESSAGE_INVALID_LENGTH = 'O arquivo enviado possui %2.f MB. O máximo permitido: %2.f MB.';
 
     const EXCEPTION_CODE_SIZE = 3002;
 

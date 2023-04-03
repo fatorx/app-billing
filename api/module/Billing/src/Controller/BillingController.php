@@ -3,6 +3,7 @@
 namespace Billing\Controller;
 
 use Application\Controller\ApiController;
+use Application\Logs\Log;
 use Billing\Service\BillingService;
 use Billing\Values\PostFile;
 use Billing\Values\PostPayment;
@@ -15,6 +16,8 @@ use Laminas\View\Model\JsonModel;
  */
 class BillingController extends ApiController
 {
+    use Log;
+
     /**
      * @var BillingService $service
      */
@@ -33,86 +36,55 @@ class BillingController extends ApiController
         try {
             $data = $this->getFile();
             $postFile = new PostFile($data);
-            $fileName = $this->service->storage($postFile);
+            $storageKey = $this->service->storage($postFile);
             $data = [
-                'storage_key' => $fileName,
+                'storage_key' => $storageKey,
             ];
         } catch (Exception $e) {
             $this->httpStatusCode = 400;
             $data = [
                 'message' => $e->getMessage()
             ];
+            $this->addLog($e->getMessage(), 'send_file_');
         }
 
         return $this->createResponse($data);
     }
 
-    public function consumerFilesAction(): JsonModel
+    public function consumerFilesAction()
     {
         try {
             $status = $this->service->consumerFiles();
-            $data = [
-                'status' => $status,
-            ];
         } catch (Exception $e) {
-            $this->httpStatusCode = 400;
-            $data = [
-                'message' => $e->getMessage()
-            ];
+            $this->addLog($e->getMessage());
         }
-
-        return $this->createResponse($data);
     }
 
-    public function consumerLinesAction(): JsonModel
+    public function consumerLinesAction()
     {
         try {
             $status = $this->service->consumerLines();
-            $data = [
-                'status' => $status,
-            ];
         } catch (Exception $e) {
-            $this->httpStatusCode = 400;
-            $data = [
-                'message' => $e->getMessage()
-            ];
+            $this->addLog($e->getMessage());
         }
-
-        return $this->createResponse($data);
     }
 
-    public function consumerEmailsAction(): JsonModel
+    public function consumerEmailsAction()
     {
         try {
             $status = $this->service->consumerEmails();
-            $data = [
-                'status' => $status,
-            ];
         } catch (Exception $e) {
-            $this->httpStatusCode = 400;
-            $data = [
-                'message' => $e->getMessage()
-            ];
+            $this->addLog($e->getMessage());
         }
-
-        return $this->createResponse($data);
     }
 
-    public function consumerPaymentsAction(): JsonModel
+    public function consumerPaymentsAction()
     {
         try {
             $status = $this->service->consumerPayments();
-            $data = [
-                'status' => $status,
-            ];
         } catch (Exception $e) {
-            $this->httpStatusCode = 400;
-            $data = [
-                'message' => $e->getMessage()
-            ];
+            $this->addLog($e->getMessage());
         }
-
-        return $this->createResponse($data);
     }
 
     public function webhookAction(): JsonModel
@@ -130,6 +102,7 @@ class BillingController extends ApiController
             $data = [
                 'message' => $e->getMessage()
             ];
+            $this->addLog($e->getMessage(), 'webhoook_');
         }
 
         return $this->createResponse($data);

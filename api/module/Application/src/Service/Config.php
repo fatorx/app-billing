@@ -22,7 +22,7 @@ class Config
      * @throws NotFoundExceptionInterface
      * @throws RedisException
      */
-    public function setup(ServiceManager $serviceManager, IService $service): IService
+    public function setup(ServiceManager $serviceManager, IService $service): IService|null
     {
         $config = $serviceManager->get(self::CONFIG_KEY);
         $service->setConfig($config['app']);
@@ -34,12 +34,14 @@ class Config
             $entityManager = $serviceManager->get(EntityManager::class);
             $service->setEm($entityManager);
         } catch (NotFoundExceptionInterface|ContainerExceptionInterface $e) {
-            echo $e->getMessage();
+            //echo $e->getMessage();
+
+            return null;
         }
 
-        $redis = new Redis();
-        $redis->connect($config['app']['redis_host']);
-        $service->setStorage($redis);
+//        $redis = new Redis();
+//        $redis->connect($config['app']['redis_host']);
+//        $service->setStorage($redis);
 
         return $service;
     }
