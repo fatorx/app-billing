@@ -42,15 +42,21 @@ $ git clone git@github.com:fatorx/app-billing.git && cd app-billing
 ```
 Copy .env.dist to .env and adjust values in the .env file to your preferences.
 ```shell script
-cp .env.dist .env
+cp .env.dist .env 
 ```
+
+Add permissions to folder data, this is where the persistence files will be kept.
+```shell script
+chmod 755 data
+```
+
 Mount the environment based in docker-compose.yml.
 ```shell script
 docker-compose up -d --build
 ```
 Access database to create tables (the name app-billing-database is based in the parameter config APP in .env).
 ```shell script
-docker exec -it app-billing-database mysql -u root -p -D billings
+docker exec -it app-billing-database mysql -u user_db -p -D billings
 ```
 After access the docker with above command, at the MySQL prompt type:  
 ```shell script
@@ -117,6 +123,13 @@ vendor/bin/phpunit --testdox --testsuite "Billing Test Suite" --group billing
 ```shell script
 docker exec -it app-billing-php-fpm vendor/bin/phpunit --testdox --testsuite "Billing Test Suite"
 ```
+
+------
+### Coverage
+```shell script
+docker exec -it app-billing-php-fpm XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html data/report --group billing
+```
+
 ------
 ## Licence
 
